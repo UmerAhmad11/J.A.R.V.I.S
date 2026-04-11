@@ -5,11 +5,16 @@ import "./App.css";
 
 function App() {
   const [greetMsg, setGreetMsg] = useState("");
+  const [insultMsg, setInsultMsg] = useState("");
   const [name, setName] = useState("");
 
   async function greet() {
     // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
     setGreetMsg(await invoke("greet", { name }));
+  }
+
+  async function insult() {
+    setInsultMsg(await invoke("insult", { name }));
   }
 
   return (
@@ -44,6 +49,22 @@ function App() {
         <button type="submit">Greet</button>
       </form>
       <p>{greetMsg}</p>
+
+      <form
+        className="row"
+        onSubmit={(e) => {
+          e.preventDefault();
+          insult();
+        }}
+      >
+        <input
+          id="insult-input"
+          onChange={(e) => setName(e.currentTarget.value)}
+          placeholder="Enter a name..."
+        />
+        <button type="submit">Insult</button>
+      </form>
+      <p>{insultMsg}</p>
     </main>
   );
 }

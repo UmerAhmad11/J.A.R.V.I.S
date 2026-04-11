@@ -13,6 +13,7 @@
     "windows": [
       {
         "title": "jarvis",
+        "transparent": true,
         "width": 800,
         "height": 600
       }
