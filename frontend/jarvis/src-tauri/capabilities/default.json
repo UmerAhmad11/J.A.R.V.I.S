@@ -6,6 +6,7 @@
   "permissions": [
     "core:default",
     "opener:default",
-    "liquid-glass:default"
+    "liquid-glass:default",
+    "positioner:default"
   ]
 }

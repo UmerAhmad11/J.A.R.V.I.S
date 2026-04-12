@@ -1,70 +1,41 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
 import { invoke } from "@tauri-apps/api/core";
 import "./App.css";
 
 function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [insultMsg, setInsultMsg] = useState("");
-  const [name, setName] = useState("");
+  const [isCollapsed, setIsCollapsed] = useState(false);  
 
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-    setGreetMsg(await invoke("greet", { name }));
+  async function handleStart(){
+    setIsCollapsed(true);
+    await invoke("start");
   }
 
-  async function insult() {
-    setInsultMsg(await invoke("insult", { name }));
+  // Collapsed bar UI - renders after fold animation completes
+  if (isCollapsed) {
+    return (
+      <main className="collapsed-bar">
+        <h3 style={{ margin: 12, color: "white" }}>J.A.R.V.I.S</h3>
+        <button onClick={async () => {
+          setIsCollapsed(false);
+          await invoke("expand");
+        }}>Expand</button>
+      </main>
+    );
   }
 
+  // Original full UI
   return (
-    <main className="container">
-      <h1>Welcome to Tauri + React</h1>
+    <main className={`container ${isCollapsed ? "collapsing" : ""}`}>
+      <h1 style={{color: "white"}}>J.A.R.V.I.S</h1>
 
-      <div className="row">
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://tauri.app" target="_blank">
-          <img src="/tauri.svg" className="logo tauri" alt="Tauri logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <p>Click on the Tauri, Vite, and React logos to learn more.</p>
-
-      <form
-        className="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          greet();
-        }}
+      {/* Start button - triggers smooth fold animation */}
+      <button
+        onClick={handleStart}
+        className="start-button"
+        style={{ marginTop: "2rem" }}
       >
-        <input
-          id="greet-input"
-          onChange={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
-        />
-        <button type="submit">Greet</button>
-      </form>
-      <p>{greetMsg}</p>
-
-      <form
-        className="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          insult();
-        }}
-      >
-        <input
-          id="insult-input"
-          onChange={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
-        />
-        <button type="submit">Insult</button>
-      </form>
-      <p>{insultMsg}</p>
+        Start
+      </button>
     </main>
   );
 }
